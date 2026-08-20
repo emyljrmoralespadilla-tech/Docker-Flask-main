@@ -3,15 +3,35 @@ name: CI/CD Docker
 on:
   push:
     branches:
-      - main
       - master
 
 jobs:
-  build:
+  test:
+    name: Test
     runs-on: ubuntu-latest
 
     steps:
-      - name: Descargar cÃ³digo
+      - name: Descargar código
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Instalar dependencias
+        run: pip install -r requirements.txt
+
+      - name: Ejecutar pruebas
+        run: pytest
+
+  build:
+    name: Build and Deploy
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar código
         uses: actions/checkout@v4
 
       - name: Construir imagen Docker
