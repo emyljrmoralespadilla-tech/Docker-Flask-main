@@ -1,4 +1,6 @@
-FROM python:3.8-slim-buster  # Trivy: Imagen base obsoleta con vulnerabilidades
+# Fallo Trivy: Imagen base obsoleta con vulnerabilidades
+FROM python:3.8-slim-buster
+
 WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
