@@ -2,7 +2,6 @@ import os
 from flask import Flask
 
 sample = Flask(__name__)
-MYSQL_PASSWORD = os.getenv('MYSQL_PASSWORD', '')
 
 @sample.route('/')
 def main():
