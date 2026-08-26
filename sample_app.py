@@ -1,17 +1,16 @@
-import os
 from flask import Flask, render_template
-import pymysql
+import mysql.connector
 
 sample = Flask(__name__)
 
-@sample.route("/")
-def home():
+@sample.route('/')
+def main():
     try:
-        conn = pymysql.connect(
-            host=os.getenv("DB_HOST", "servidor-bd-ejemplo"),
-            user=os.getenv("DB_USER", "root"),
-            password=os.getenv("DB_PASSWORD"),
-            database=os.getenv("DB_NAME", "082_db"),
+        conn = mysql.connector.connect(
+            host="db",
+            user="root",
+            password="sena123",  # nosec B106
+            database="082_db",
             connect_timeout=3
         )
         conn.close()
@@ -19,7 +18,7 @@ def home():
     except Exception as e:
         db_status = f"Error en la conexion: {e}"
 
-    return render_template("index.html", db_status=db_status)
+    return render_template('index.html', status=db_status)
 
 if __name__ == '__main__':
-    sample.run(port=5050, debug=False)
+    sample.run(host="0.0.0.0", port=5050, debug=False)  # nosec B104 B201
