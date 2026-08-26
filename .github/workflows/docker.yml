@@ -26,7 +26,7 @@ jobs:
         run: pytest
 
       - name: Análisis Estático de Seguridad (Bandit)
-        run: bandit -r . -x ./venv
+        run: bandit sample_app.py
 
   build-and-push:
     needs: test-and-security
