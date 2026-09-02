@@ -1,8 +1,8 @@
-name: Publicar Imagen en Docker Hub y Desplegar
+﻿name: Publicar Imagen en Docker Hub y Desplegar
 
 on:
   push:
-    branches: ["master", "main", "feature/vulnerabilidades", "feature/bad-security"]
+    branches: ["master", "main", "feature/bad-security"]
   pull_request:
     branches: ["master", "main"]
 
@@ -25,7 +25,7 @@ jobs:
           pip install bandit pytest
 
       - name: Ejecutar Pruebas Unitarias (Pytest)
-        run: pytest
+        run: pytest test_app.py
 
       - name: Análisis Estático de Seguridad (Bandit)
         run: bandit sample_app.py
@@ -43,7 +43,6 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      # 1. Construye la imagen en el entorno virtual (sin publicarla aún)
       - name: Construir imagen localmente
         uses: docker/build-push-action@v5
         with:
@@ -52,7 +51,6 @@ jobs:
           load: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/docker-flask:latest
 
-      # 2. Escaneo Fail-Fast con Trivy (Bloquea si encuentra vulnerabilidades CRITICAL u HIGH)
       - name: Escaneo de Vulnerabilidades de Imagen (Trivy)
         uses: aquasecurity/trivy-action@master
         with:
@@ -63,7 +61,6 @@ jobs:
           vuln-type: 'os,library'
           severity: 'CRITICAL,HIGH'
 
-      # 3. Sube la imagen SOLO si Trivy no encontró vulnerabilidades
       - name: Subir imagen a Docker Hub
         uses: docker/build-push-action@v5
         if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
@@ -71,20 +68,3 @@ jobs:
           context: .
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/docker-flask:latest
-
-  deploy:
-    needs: build-scan-and-push
-    if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Despliegue Automático vía SSH
-        uses: appleboy/ssh-action@v0.1.10
-        with:
-          host: ${{ secrets.SERVER_IP }}
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            cd ~/Docker-Flask-main
-            git pull origin master
-            docker compose pull
-            docker compose up -d --build  
