@@ -8,3 +8,4 @@ def main():
 
 if __name__ == "__main__":
     sample.run(host="0.0.0.0", port=5050, debug=False)  # nosec B104
+DB_PASSWORD = 'PasswordSuperSecreta123!'
