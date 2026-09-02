@@ -11,10 +11,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout del código
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Configurar Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.12'
 
@@ -25,10 +25,10 @@ jobs:
           pip install bandit pytest
 
       - name: Ejecutar Pruebas Unitarias (Pytest)
-        run: pytest -v test_app.py
+        run: pytest test_app.py
 
       - name: Análisis Estático de Seguridad (Bandit)
-        run: bandit -r . -x ./venv -l
+        run: bandit -r . -x ./venv -ll
 
   build-scan-and-push:
     needs: test-and-security
@@ -68,3 +68,4 @@ jobs:
           context: .
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/docker-flask:latest
+
