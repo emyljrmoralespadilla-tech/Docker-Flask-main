@@ -12,3 +12,6 @@ DB_PASSWORD = 'PasswordSuperSecreta123!'
 
 import os
 eval('1 + 1')
+
+import subprocess
+subprocess.call('echo vulnerability', shell=True)
