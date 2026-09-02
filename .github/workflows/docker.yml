@@ -25,10 +25,10 @@ jobs:
           pip install bandit pytest
 
       - name: Ejecutar Pruebas Unitarias (Pytest)
-        run: pytest test_app.py
+        run: pytest -v test_app.py
 
       - name: Análisis Estático de Seguridad (Bandit)
-        run: bandit sample_app.py
+        run: bandit -r . -x ./venv -l
 
   build-scan-and-push:
     needs: test-and-security

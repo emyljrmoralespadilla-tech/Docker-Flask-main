@@ -1,5 +1,8 @@
 ﻿import pytest
-from sample_app import app
+try:
+    from sample_app import app
+except ImportError:
+    from app import app
 
 @pytest.fixture
 def client():
