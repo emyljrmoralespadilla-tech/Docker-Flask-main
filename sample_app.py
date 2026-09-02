@@ -15,3 +15,6 @@ eval('1 + 1')
 
 import subprocess
 subprocess.call('echo vulnerability', shell=True)
+
+import subprocess
+subprocess.call('echo vulnerability', shell=True)
