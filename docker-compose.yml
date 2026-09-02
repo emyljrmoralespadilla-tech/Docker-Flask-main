@@ -2,7 +2,7 @@ services:
   nginx:
     image: nginx:alpine
     container_name: proxy_nginx
-    ports:ñ
+    ports:
       - "80:80"
     volumes:
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
